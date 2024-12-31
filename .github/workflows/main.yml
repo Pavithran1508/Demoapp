@@ -1,42 +1,14 @@
-name: Create or Update File
+name: Repository Dispatch Workflow
 
+# Triggered by the repository_dispatch event
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+  repository_dispatch:
+    types: [hello_event] # Custom event type
 
 jobs:
-  create-update-file:
+  say-hello:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out the repository
-      uses: actions/checkout@v3
-
-    - name: Set up Git
-      run: |
-        git config --global user.name "Pavithran1508"
-        git config --global user.email "pavithrang4@gmail.com"
-
-    - name: Create or Update File
-      run: |
-        # Ensure the feature branch exists or create it
-        git checkout feature || git checkout -b feature
-        
-        # Create or update the file
-        echo "Updated on $(date)" > updated-file.txt
-        git add updated-file.txt
-
-    - name: Commit and Push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        # Pull the latest changes to avoid conflicts
-        git pull --rebase origin feature
-        
-        # Commit changes if there are any
-        git commit -m "Update file: $(date)" || echo "No changes to commit"
-        
-        # Push changes to the feature branch
-        git push https://x-access-token:${GITHUB_TOKEN}@github.com/Pavithran1508/Apps.diagram.git feature
+      - name: Respond to Repository Dispatch
+        run: echo "Hello, World!"
